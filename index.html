@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini Quiz Interactivo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .pregunta {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .opcion {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      max-width: 300px;
+    }
+
+    .opcion:hover {
+      background-color: #ccc;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    #siguienteBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #siguienteBtn:hover {
+      background-color: #388E3C;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz sobre tecnología</h1>
+  <h2>¡Buena suerte!</h2>
+
+  <div id="quiz">
+    <div class="pregunta" id="preguntaTexto"></div>
+    <div id="opciones"></div>
+    <div id="resultado"></div>
+    <button id="siguienteBtn" onclick="siguientePregunta()">Siguiente</button>
+  </div>
+<script>
+  const preguntas = [
+    {
+        texto: "1. ¿Cual es el sistema operativo más usado en computadoras?",
+        opciones: ["Android", "Linux", "Windows", "macOS"],
+        correcta: 2
+        },
+    {
+        texto: "2. ¿Cual de estos dispositivos convierte la energía eléctrica en una forma útil para la computadora?",
+        opciones: ["Tarjeta madre", "Procesador", "Fuente de poder", "USB"],
+        correcta: 2
+        },
+    {
+        texto: "3. ¿Cual de estos componentes guarda información solo mientras la computadora está encendida, y se borra al apagarla?",
+        opciones: ["Memoria RAM", "USB", "Disco duro", "CD-ROM"],
+        correcta: 0
+        },
+    {
+        texto: "4. ¿Cuál es el componente principal que conecta y permite que todos los demás funcionen juntos dentro de una computadora?",
+        opciones: ["Disco duro", "Procesador", "Tarjeta madre", "Memoria RAM"],
+        correcta: 2
+        },
+    {
+        texto: "5. ¿Qué es el pseudocódigo?",
+        opciones: ["Una forma de escribir algoritmos sin usar sintaxis real de un lenguaje", "Un comentario largo", "Un programa para hacer gráficos", "Código que no se puede ejecutar"],
+        correcta: 0
+        },
+    {
+        texto: "6. ¿Qué dispositivo se utiliza para conectar una computadora o un teléfono a internet mediante una red Wi-Fi?",
+        opciones: ["Impresora", "Monitor", "Teclado", "Router (enrutador)"],
+        correcta: 3
+        },
+    {
+        texto: "7. ¿Cual es la diferencia entre == y === en JavaScrip?",
+        opciones: ["== compara solo tipos, === compara solo los valores", "== y === hacen exactamente lo mismo, solo que uno es mas moderno", "== compara valores permitiendo conversión de tipos; === compara valor y tipo sin conversión", "== se usa para strings y === para números"],
+        correcta: 2
+        },
+    {
+        texto: "8. ¿Si una computadora se apaga de repente y pierdes lo que no guardaste, ¿dónde estaba esa información temporalmente?",
+        opciones: ["En el disco duro", "En la memoria RAM", "En la nube", "En la impresora"],
+        correcta: 1
+        },
+    {
+        texto: "9. ¿Qué componente es considerado el cerebro de la computadora?",
+        opciones: ["RAM", "Disco duro", "Monitor", "Procesador (CPU)"],
+        correcta: 3
+        },
+    {
+        texto: "10. ¿Nombre del coordianor(a) del proyecto?",
+        opciones: ["Elias Arosemena", "Yajanis Frazer", "Anyelis González", "Edgardo Castrejon", "Mileydis Núñes"],
+        correcta: 1
+        },
+  ];
+
+  let preguntaActual = 0;
+  let aciertos = 0;
+
+  function mostrarPregunta() {
+    const pregunta = preguntas[preguntaActual];
+    document.getElementById("preguntaTexto").textContent = pregunta.texto;
+
+    const opcionesDiv = document.getElementById("opciones");
+    opcionesDiv.innerHTML = "";
+
+    const opcionesMezcladas = pregunta.opciones.map((texto, index) => ({
+      texto,
+      originalIndex: index
+    })).sort(() => Math.random() - 0.5);
+
+    opcionesMezcladas.forEach((opcionObj) => {
+      const boton = document.createElement("button");
+      boton.textContent = opcionObj.texto;
+      boton.className = "opcion";
+      boton.onclick = () => verificarRespuesta(opcionObj.originalIndex);
+      opcionesDiv.appendChild(boton);
+    });
+
+    document.getElementById("resultado").textContent = "";
+    document.getElementById("siguienteBtn").style.display = "none";
+  }
+
+  function verificarRespuesta(indice) {
+    const correcta = preguntas[preguntaActual].correcta;
+    const resultado = document.getElementById("resultado");
+    if (indice === correcta) {
+      resultado.textContent = "✅ ¡Correcto!";
+      resultado.style.color = "green";
+      aciertos++;
+    } else {
+      resultado.textContent = "❌ Incorrecto. La respuesta correcta es: " + preguntas[preguntaActual].opciones[correcta];
+      resultado.style.color = "red";
+    }
+
+    const botones = document.querySelectorAll(".opcion");
+    botones.forEach(btn => btn.disabled = true);
+
+    document.getElementById("siguienteBtn").style.display = "inline-block";
+  }
+
+  function siguientePregunta() {
+    preguntaActual++;
+    if (preguntaActual < preguntas.length) {
+      mostrarPregunta();
+    } else {
+      const total = preguntas.length;
+      const promedio = Math.round((aciertos / total) * 100);
+      document.getElementById("quiz").innerHTML = `
+        <h2>🎉 ¡Has completado el quiz!</h2>
+        <p>✅ Respuestas correctas: <strong>${aciertos} de ${total}</strong></p>
+        <p>📊 Promedio: <strong>${promedio}%</strong></p>
+        <button onclick="reiniciarQuiz()" style="margin-top:20px; padding:10px 20px; background-color:#2196F3; color:white; border:none; border-radius:5px; cursor:pointer;">🔁 Reintentar</button>
+      `;
+    }
+  }
+
+  function reiniciarQuiz() {
+    preguntaActual = 0;
+    aciertos = 0;
+    document.getElementById("quiz").innerHTML = `
+      <div class="pregunta" id="preguntaTexto"></div>
+      <div id="opciones"></div>
+      <div id="resultado"></div>
+      <button id="siguienteBtn" onclick="siguientePregunta()">Siguiente</button>
+    `;
+    mostrarPregunta();
+  }
+
+  mostrarPregunta();
+</script>
