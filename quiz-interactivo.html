@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mini Quiz Interactivo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f5f5f5;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+     h2 {
+      color: #333;
+    }
+
+    .pregunta {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .opcion {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      max-width: 300px;
+    }
+
+    .opcion:hover {
+      background-color: #ccc;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    #siguienteBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #siguienteBtn:hover {
+      background-color: #388E3C;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz Interactivo sobre tecnología</h1>
+  <h2>¡Buena suerte!</h2>
+
+  <div id="quiz">
+    <div class="pregunta" id="preguntaTexto"></div>
+    <div id="opciones"></div>
+    <div id="resultado"></div>
+    <button id="siguienteBtn" onclick="siguientePregunta()">Siguiente</button>
+  </div>
+
+  <script>
+    const preguntas = [
+      {
+        texto: "¿Cual es el sistema operativo las usado en computadoras?",
+        opciones: ["Android", "Linux", "Windows", "macOS"],
+        correcta: 2
+      },
+      {
+        texto: "¿Cual de estos dispositivos convierte la energía eléctrica en una forma útil para la computadora?",
+        opciones: ["Tarjeta madre", "Procesador", "Fuente de poder", "USB"],
+        correcta: 2
+      },
+      {
+        texto: "¿Cual de estos componentes guarda informació solo mientras la computadora está encendida, y se borra al apagarla?",
+        opciones: ["Memoria RAM", "USB", "Disco duro", "CD-ROM"],
+        correcta: 0
+      },
+      {
+        texto: "¿Cuál es el componente principal que conecta y permite que todos los demás funcionen juntos dentro de una computadora?",
+        opciones: ["Disco duro", "Procesador", "Tarjeta madre", "Memoria RAM"],
+        correcta: 2
+      },
+      {
+        texto: "¿Si una computadora se apaga de repente y pierdes lo que no guardaste, ¿dónde estaba esa información temporalmente?",
+        opciones: ["En el disco duro", "En la memoria RAM", "En la nube", "En la impresora"],
+        correcta: 1
+      },
+      {
+        texto: "¿Cual es el nombre de la coordinadora del proyecto?",
+        opciones: ["Elias Arosemena", "Yajanis Frazer", "Edgardo Castrejon", "Mileydis nuñez", "Anyelis Gonzalez"],
+        correcta: 1
+      },
+      {
+        texto: "¿Qué componente es considerado el cerebro de la computadora?",
+        opciones: ["RAM", "Disco duro", "Monitor", "Procesador (CPU)"],
+        correcta: 3
+      }
+    ];
+
+    let preguntaActual = 0;
+
+    function mostrarPregunta() {
+      const pregunta = preguntas[preguntaActual];
+      document.getElementById("preguntaTexto").textContent = pregunta.texto;
+
+      const opcionesDiv = document.getElementById("opciones");
+      opcionesDiv.innerHTML = "";
+
+      pregunta.opciones.forEach((opcion, index) => {
+        const boton = document.createElement("button");
+        boton.textContent = opcion;
+        boton.className = "opcion";
+        boton.onclick = () => verificarRespuesta(index);
+        opcionesDiv.appendChild(boton);
+      });
+
+      document.getElementById("resultado").textContent = "";
+      document.getElementById("siguienteBtn").style.display = "none";
+    }
+
+    function verificarRespuesta(indice) {
+      const correcta = preguntas[preguntaActual].correcta;
+      const resultado = document.getElementById("resultado");
+      if (indice === correcta) {
+        resultado.textContent = "✅ ¡Correcto!";
+        resultado.style.color = "green";
+      } else {
+        resultado.textContent = "❌ Incorrecto. La respuesta correcta es: " + preguntas[preguntaActual].opciones[correcta];
+        resultado.style.color = "red";
+      }
+
+      // Desactivar botones
+      const botones = document.querySelectorAll(".opcion");
+      botones.forEach(btn => btn.disabled = true);
+
+      document.getElementById("siguienteBtn").style.display = "inline-block";
+    }
+
+    function siguientePregunta() {
+      preguntaActual++;
+      if (preguntaActual < preguntas.length) {
+        mostrarPregunta();
+      } else {
+        document.getElementById("quiz").innerHTML = "<h2>🎉 ¡Has completado el quiz!</h2>";
+      }
+    }
+
+    mostrarPregunta(); // Inicial
+  </script>
+
+</body>
+</html>
